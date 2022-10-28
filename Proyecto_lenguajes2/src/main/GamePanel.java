@@ -3,9 +3,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.util.ArrayList;
 import javax.swing.JPanel;
-
+import entity.Entity;
+import entity.Projectile;
 import entity.Tank;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -23,6 +24,9 @@ public class GamePanel extends JPanel implements Runnable {
 	Thread gameThread;
 	KeyHandler kh = new KeyHandler();
 	Tank tank = new Tank(this, kh);
+	public ArrayList<Entity> entityList = new ArrayList<>();
+	
+	public ArrayList<Entity> projectileList = new ArrayList<>(); 
 	
 	
 	
@@ -44,8 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
 		double drawInterval = 1000000000 / FPS;
 		double nextDrawTime = System.nanoTime() + drawInterval;
 		while(gameThread != null) {
-			System.out.println("Game thread is running");
-			
+		
 			update();
 			repaint();
 			try {
@@ -67,12 +70,31 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	public void update() {
 		tank.update();
+		
+		for (int i = 0; i < projectileList.size(); i++) {
+			System.out.println(projectileList.get(i));
+			if(  projectileList.get(i) != null) {
+				if(projectileList.get(i).alive) {
+					projectileList.get(i).update();
+				}
+				if(!projectileList.get(i).alive) {
+					projectileList.remove(i);
+				}
+			}
+		}
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
+		//entityList.add(tank);
+		
 		tank.draw(g2);
+		for(int i = 0; i < projectileList.size(); i++) {
+			System.out.println(projectileList);
+			projectileList.get(i).draw(g2);
+		}
+
 		g2.dispose();
 	}
 	

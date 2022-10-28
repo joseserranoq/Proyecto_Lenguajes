@@ -8,11 +8,13 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.Bullet;
 
 public class Tank extends Entity {
 	GamePanel gp;
 	KeyHandler kh;
 	public Tank (GamePanel gp, KeyHandler kh) {
+		super(gp);
 		this.gp = gp;
 		this.kh  =kh;
 		setDefaultValues();
@@ -21,12 +23,16 @@ public class Tank extends Entity {
 	public void setDefaultValues() {
 		X = 100;
 		Y = 100;
-		SPEED = 4;
+		SPEED = 3;
 		DIRECTION = "DOWN";
+		projectile = new Bullet(gp);
 	}
 	public void getPlayerImage() {
 		try {
-				up1 = ImageIO.read(getClass().getResourceAsStream("/tank/TANK16.png"));
+				up1 = ImageIO.read(getClass().getResourceAsStream("/tank/TANK.png"));
+				down = ImageIO.read(getClass().getResourceAsStream("/tank/TANKD.png"));
+				left = ImageIO.read(getClass().getResourceAsStream("/tank/TANKL.png"));
+				right = ImageIO.read(getClass().getResourceAsStream("/tank/TANKR.png"));
 				
 
 		}
@@ -49,6 +55,17 @@ public class Tank extends Entity {
 			X += SPEED;
 			DIRECTION = "RIGHT";
 		}
+		
+		if(kh.fPressed && projectile.alive == false) {
+			projectile.set(X, Y, DIRECTION, true, this);
+			gp.projectileList.add(projectile);
+		}
+
+		if(kh.spacePressed){
+			this.SPEED = 7;
+		}else {
+			this.SPEED = 3;
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -58,13 +75,13 @@ public class Tank extends Entity {
 			image = up1;
 			break;
 		case "DOWN":
-			image = up1;
+			image = down;
 			break;
 		case "LEFT":
-			image = up1;
+			image = left;
 			break;
 		case "RIGHT":
-			image = up1;
+			image = right;
 			break;
 		}
 		g2.drawImage(image, X, Y, gp.tileSize, gp.tileSize, null);
