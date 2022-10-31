@@ -1,6 +1,6 @@
 package entity;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -19,7 +19,9 @@ public class Entity {
 	public Boolean alive;
 	public Integer life;
 	public Integer maxLife;
-	
+
+	public Rectangle solidArea;
+	public boolean collisionOn = false;
 	public Entity(GamePanel gp) {
 		this.gp = gp;
 		this.SPEED = 5;
@@ -29,7 +31,7 @@ public class Entity {
 		
 	}
 	public void draw(Graphics2D g2) {
-		
+
 	}
 
 }

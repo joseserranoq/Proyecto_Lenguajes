@@ -1,7 +1,6 @@
 package entity;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -17,6 +16,9 @@ public class Tank extends Entity {
 		super(gp);
 		this.gp = gp;
 		this.kh  =kh;
+
+		solidArea = new Rectangle(8,16,32,32);
+
 		setDefaultValues();
 		getPlayerImage();
 	}
@@ -42,20 +44,44 @@ public class Tank extends Entity {
 		}
 	}
 	public void update() {
-		if(kh.upPressed) {
-			Y -= SPEED;
-			DIRECTION = "UP";
-		}else if(kh.downPressed) {
-			Y += SPEED;
-			DIRECTION = "DOWN";
-		}else if(kh.leftPressed) {
-			X -= SPEED;
-			DIRECTION = "LEFT";
-		}else if(kh.rightPressed) {
-			X += SPEED;
-			DIRECTION = "RIGHT";
+		//if the keys a,w,s,d are pressed it will move
+		if (kh.upPressed || kh.downPressed || kh.leftPressed || kh.rightPressed) {
+			if (kh.upPressed) {
+				DIRECTION = "UP";
+				//Y -= SPEED;
+			} else if (kh.downPressed) {
+				DIRECTION = "DOWN";
+				//Y += SPEED;
+			} else if (kh.leftPressed) {
+				DIRECTION = "LEFT";
+				//X -= SPEED;
+			} else if (kh.rightPressed) {
+				DIRECTION = "RIGHT";
+				//X += SPEED;
+			}
+
+			// COLLISION
+			collisionOn = false;
+			gp.cChecker.checkTile(this);
+			// IF COLLISIONON IS FALSE TANK MOVE
+			if (collisionOn == false) {
+				switch (DIRECTION) {
+					case "UP":
+						Y -= SPEED;
+						break;
+					case "DOWN":
+						Y += SPEED;
+						break;
+					case "LEFT":
+						X -= SPEED;
+						break;
+					case "RIGHT":
+						X += SPEED;
+						break;
+				}
+			}
 		}
-		
+
 		if(kh.fPressed && projectile.alive == false) {
 			projectile.set(X, Y, DIRECTION, true, this);
 			gp.projectileList.add(projectile);

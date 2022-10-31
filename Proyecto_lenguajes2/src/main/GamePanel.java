@@ -8,21 +8,24 @@ import javax.swing.JPanel;
 import entity.Entity;
 import entity.Projectile;
 import entity.Tank;
+import tiles.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 	final int originalTileSize = 16; //16x16 tiles
 	final int scale = 3;
 	public final int tileSize = originalTileSize * scale;
-	final int maxScreenCol = 16 ;
-	final int maxScreenRow = 12;
-	final int SCREEN_WIDTH = tileSize * maxScreenCol;
-	final int SCREEN_HEIGHT = tileSize * maxScreenRow;
+	public final int maxScreenCol = 16 ;
+	public final int maxScreenRow = 12;
+	public final int SCREEN_WIDTH = tileSize * maxScreenCol;
+	public int SCREEN_HEIGHT = tileSize * maxScreenRow;
 	int playerX = 100;
 	int playerY = 100;
 	int playerSpeed = 4;
 	int FPS = 60;
+	TileManager tileM = new TileManager(this);
 	Thread gameThread;
 	KeyHandler kh = new KeyHandler();
+	public CollisionChecker cChecker = new CollisionChecker(this);
 	Tank tank = new Tank(this, kh);
 	public ArrayList<Entity> entityList = new ArrayList<>();
 	
@@ -88,7 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		//entityList.add(tank);
-		
+		tileM.draw(g2); //draw the tiles
 		tank.draw(g2);
 		for(int i = 0; i < projectileList.size(); i++) {
 			System.out.println(projectileList);
