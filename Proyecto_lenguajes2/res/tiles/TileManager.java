@@ -20,7 +20,7 @@ public class TileManager {
         tile = new Tile[3]; //the quantity of kind of tiles
         mapTileNum = new int[gp.maxScreenCol][gp.maxScreenRow];
         getTileImage();
-        loadMap();
+        loadMap(0);
     }
     public void getTileImage(){
         try{
@@ -34,14 +34,14 @@ public class TileManager {
             e.printStackTrace();
         }
     }
-    public void loadMap(){
+    public void loadMap(int mapNumber){
         try{
             //get a map randomly
             Random rand = new Random();
             int numMap = rand.nextInt(5); //it chooses a number between 0-5
 
             String mapPath= "";
-            switch (numMap){
+            switch (mapNumber){
                 case 0: mapPath ="/maps/map01.txt";
                 break;
                 case 1: mapPath ="/maps/map02.txt";
@@ -53,6 +53,7 @@ public class TileManager {
                 case 4: mapPath ="/maps/map05.txt";
                 break;
             }
+
             System.out.println("es el numero "+numMap + "la ruta del mapa "+mapPath);
             InputStream is = getClass().getResourceAsStream(mapPath);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));

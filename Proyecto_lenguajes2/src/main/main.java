@@ -18,6 +18,7 @@ public class main {
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        gamePanel.setupGame();
         gamePanel.startGameThread();
         /*
         String path = "consult('file.pl')";

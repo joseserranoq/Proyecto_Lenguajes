@@ -1,5 +1,6 @@
 package object;
 
+import java.awt.*;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -13,8 +14,10 @@ public class Bullet extends Projectile {
 		super(gp);
 		this.gp = gp;
 		name = "Bullet";
-		speed = 5;
+		SPEED = 5;
 		alive = false;
+		damage = 1;
+		//solidArea = new Rectangle(this.X,this.Y,32,32);
 		getImage();
 		// TODO Auto-generated constructor stub
 	}

@@ -16,8 +16,12 @@ public class Tank extends Entity {
 		super(gp);
 		this.gp = gp;
 		this.kh  =kh;
+		this.type = 0;
+		solidArea = new Rectangle(8,16,46,46);
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+		this.belongs = "Tank";
 
-		solidArea = new Rectangle(8,16,32,32);
 
 		setDefaultValues();
 		getPlayerImage();
@@ -25,6 +29,7 @@ public class Tank extends Entity {
 	public void setDefaultValues() {
 		X = 100;
 		Y = 100;
+		life = maxLife;
 		SPEED = 3;
 		DIRECTION = "DOWN";
 		projectile = new Bullet(gp);
@@ -63,6 +68,14 @@ public class Tank extends Entity {
 			// COLLISION
 			collisionOn = false;
 			gp.cChecker.checkTile(this);
+			int objectIndex = gp.cChecker.checkObject(this, true);
+
+			pickupObject(objectIndex);
+			int entityIndex = gp.cChecker.checkEntity(this, gp.monsterList);
+			int bulletIndex = gp.cChecker.checkEntity(this, gp.projectileList);
+			interactNPCIndex(entityIndex);
+			contactBullet(bulletIndex);
+			//contactMonster(entityIndex);
 			// IF COLLISIONON IS FALSE TANK MOVE
 			if (collisionOn == false) {
 				switch (DIRECTION) {
@@ -81,18 +94,62 @@ public class Tank extends Entity {
 				}
 			}
 		}
-
 		if(kh.fPressed && projectile.alive == false) {
 			projectile.set(X, Y, DIRECTION, true, this);
 			gp.projectileList.add(projectile);
 		}
 
-		if(kh.spacePressed){
-			this.SPEED = 7;
-		}else {
-			this.SPEED = 3;
+		if(invincible == true){
+			invincibleCounter++;
+			if(invincibleCounter > 60){
+				invincible = false;
+				invincibleCounter = 0;
+			}
+		}
+
+	}
+
+	private  void contactMonster(int index) {
+		if(index != 999){
+			if(invincible == false){
+				life -= 1;
+				invincible = true;
+			}
 		}
 	}
+
+	private void contactBullet(int bulletIndex) {
+		if(bulletIndex != 999) {
+			if(invincible == false){
+				life -= gp.projectileList.get(bulletIndex).damage;
+				invincible = true;
+				gp.projectileList.get(bulletIndex).alive = false;
+			}
+
+		}
+	}
+
+	private void interactNPCIndex(int index ) {
+		if(index != 999){
+
+
+		}
+	}
+
+	public void pickupObject(int index){
+		if(index != 999){
+			String objName = gp.entityList.get(index).name;
+			switch (objName){
+				case "BronzeCoin":
+					gp.entityList.remove(index);
+					gp.tank.SPEED += 1;
+					break;
+			}
+
+		}
+	}
+
+
 	
 	public void draw(Graphics2D g2) {
 		BufferedImage image = null;
@@ -110,7 +167,11 @@ public class Tank extends Entity {
 			image = right;
 			break;
 		}
+		if(invincible == true) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3F));
+		}
 		g2.drawImage(image, X, Y, gp.tileSize, gp.tileSize, null);
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1F));
 		
 		
 	}

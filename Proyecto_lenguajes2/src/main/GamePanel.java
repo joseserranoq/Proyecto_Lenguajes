@@ -5,29 +5,41 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import entity.Entity;
-import entity.Projectile;
-import entity.Tank;
+
+import entity.*;
 import tiles.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 	final int originalTileSize = 16; //16x16 tiles
 	final int scale = 3;
+	public int actual_level = 0;
 	public final int tileSize = originalTileSize * scale;
 	public final int maxScreenCol = 16 ;
 	public final int maxScreenRow = 12;
 	public final int SCREEN_WIDTH = tileSize * maxScreenCol;
+	public int GAME_STATE;
+	public final int  TITLE_STATE = 0;
+	public final int PLAY_STATE = 1;
+	public final int PAUSE_STATE = 2;
 	public int SCREEN_HEIGHT = tileSize * maxScreenRow;
+	public UI ui = new UI(this);
 	int playerX = 100;
 	int playerY = 100;
 	int playerSpeed = 4;
+
 	int FPS = 60;
 	TileManager tileM = new TileManager(this);
 	Thread gameThread;
-	KeyHandler kh = new KeyHandler();
+	KeyHandler kh = new KeyHandler(this);
+
 	public CollisionChecker cChecker = new CollisionChecker(this);
-	Tank tank = new Tank(this, kh);
+	public Tank tank = new Tank(this, kh);
+	//public FastTank tank = new FastTank(this, kh);
+	//ExplosiveTank tank = new ExplosiveTank(this, kh);
+	public AssetSetter aSetter = new AssetSetter(this);
 	public ArrayList<Entity> entityList = new ArrayList<>();
+
+	public ArrayList<Entity> monsterList = new ArrayList<>();
 	
 	public ArrayList<Entity> projectileList = new ArrayList<>(); 
 	
@@ -41,8 +53,14 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		
 	}
+
+	public void setupGame(){
+		aSetter.setObject();
+		aSetter.setMonster();
+	}
 	
 	public void startGameThread () {
+		GAME_STATE = TITLE_STATE;
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
@@ -72,33 +90,95 @@ public class GamePanel extends JPanel implements Runnable {
 		
 	}
 	public void update() {
-		tank.update();
-		
-		for (int i = 0; i < projectileList.size(); i++) {
-			System.out.println(projectileList.get(i));
-			if(  projectileList.get(i) != null) {
-				if(projectileList.get(i).alive) {
-					projectileList.get(i).update();
-				}
-				if(!projectileList.get(i).alive) {
-					projectileList.remove(i);
+		if(GAME_STATE == PLAY_STATE) {
+			tank.update();
+			if(tank.life <= 0){
+				GAME_STATE = TITLE_STATE;
+				tank.life = tank.maxLife;
+				projectileList.clear();
+				entityList.clear();
+				monsterList.clear();
+				actual_level = 0;
+				setupGame();
+			}
+			if(actual_level == 3){
+				GAME_STATE = TITLE_STATE;
+
+				tank.life = tank.maxLife;
+				projectileList.clear();
+				entityList.clear();
+				monsterList.clear();
+				actual_level = 0;
+				setupGame();
+			}
+
+			if(monsterList.isEmpty() && actual_level != 3){
+				projectileList.clear();
+				entityList.clear();
+				monsterList.clear();
+				setupGame();
+				actual_level+=1;
+				tileM.loadMap(actual_level);
+
+			}
+
+
+			for (int i = 0; i < monsterList.size(); i++) {
+				if(monsterList.get(i) != null){
+
+					monsterList.get(i).update();
 				}
 			}
+
+			for (int i = 0; i < projectileList.size(); i++) {
+
+				if (projectileList.get(i) != null) {
+					if (projectileList.get(i).alive) {
+						projectileList.get(i).update();
+					}
+					if (!projectileList.get(i).alive) {
+						projectileList.remove(i);
+					}
+				}
+			}
+
+		}else if(GAME_STATE == PAUSE_STATE){
+
 		}
+
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		//entityList.add(tank);
-		tileM.draw(g2); //draw the tiles
-		tank.draw(g2);
-		for(int i = 0; i < projectileList.size(); i++) {
-			System.out.println(projectileList);
-			projectileList.get(i).draw(g2);
+		if(GAME_STATE == PAUSE_STATE){
+			ui.draw(g2);
+		}
+		if(GAME_STATE == TITLE_STATE){
+			ui.draw(g2);
+		}
+		if(GAME_STATE == PLAY_STATE){
+
+			tileM.draw(g2); //draw the tiles
+			tank.draw(g2);
+			ui.draw(g2);
+
+			for(int i = 0; i < projectileList.size(); i++) {
+				projectileList.get(i).draw(g2);
+			}
+
+			for(int i = 0; i < entityList.size(); i++) {
+				entityList.get(i).draw(g2);
+			}
+			for(int i = 0; i < monsterList.size(); i++) {
+				monsterList.get(i).draw(g2);
+			}
+
+			g2.dispose();
 		}
 
-		g2.dispose();
+
 	}
 	
 }
