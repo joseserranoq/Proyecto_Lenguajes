@@ -14,7 +14,7 @@ public class FastTank extends Entity {
         super(gp);
         this.type = 2;
         this.maxLife = 2;
-        speed = 2;
+        speed = 4;
         solidArea = new Rectangle(8,16,32,32);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
@@ -24,6 +24,7 @@ public class FastTank extends Entity {
         projectile = new Bullet(gp);
         name = "FastTank";
         belongs = "FastTank";
+        DIRECTION = "DOWN";
     }
 
     public void getPlayerImage() {

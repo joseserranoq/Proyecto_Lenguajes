@@ -17,7 +17,7 @@ public class Tank extends Entity {
 		this.gp = gp;
 		this.kh  =kh;
 		this.type = 0;
-		solidArea = new Rectangle(8,16,46,46);
+		solidArea = new Rectangle(8,16,32,32);
 		solidAreaDefaultX = solidArea.x;
 		solidAreaDefaultY = solidArea.y;
 		this.belongs = "Tank";
@@ -30,7 +30,7 @@ public class Tank extends Entity {
 		X = 100;
 		Y = 100;
 		life = maxLife;
-		SPEED = 3;
+		SPEED = 2;
 		DIRECTION = "DOWN";
 		projectile = new Bullet(gp);
 	}
@@ -73,6 +73,8 @@ public class Tank extends Entity {
 			pickupObject(objectIndex);
 			int entityIndex = gp.cChecker.checkEntity(this, gp.monsterList);
 			int bulletIndex = gp.cChecker.checkEntity(this, gp.projectileList);
+			interactNPCIndex(entityIndex);
+			entityIndex = gp.cChecker.checkEntity(this, gp.entityList);
 			interactNPCIndex(entityIndex);
 			contactBullet(bulletIndex);
 			//contactMonster(entityIndex);
@@ -143,6 +145,10 @@ public class Tank extends Entity {
 				case "BronzeCoin":
 					gp.entityList.remove(index);
 					gp.tank.SPEED += 1;
+					break;
+				case "C4":
+					gp.entityList.remove(index);
+					gp.tank.invincible = true;
 					break;
 			}
 

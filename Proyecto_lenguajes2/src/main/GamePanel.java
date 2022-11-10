@@ -95,6 +95,7 @@ public class GamePanel extends JPanel implements Runnable {
 			if(tank.life <= 0){
 				GAME_STATE = TITLE_STATE;
 				tank.life = tank.maxLife;
+				tank.speed = 2;
 				projectileList.clear();
 				entityList.clear();
 				monsterList.clear();
@@ -103,7 +104,6 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 			if(actual_level == 3){
 				GAME_STATE = TITLE_STATE;
-
 				tank.life = tank.maxLife;
 				projectileList.clear();
 				entityList.clear();
@@ -112,13 +112,14 @@ public class GamePanel extends JPanel implements Runnable {
 				setupGame();
 			}
 
-			if(monsterList.isEmpty() && actual_level != 3){
-				projectileList.clear();
-				entityList.clear();
-				monsterList.clear();
-				setupGame();
+			if(monsterList.isEmpty() && entityList.isEmpty() && actual_level != 3){
+				//projectileList.clear();
+				//entityList.clear();
+				//monsterList.clear();
+
 				actual_level+=1;
 				tileM.loadMap(actual_level);
+				setupGame();
 
 			}
 
@@ -127,6 +128,12 @@ public class GamePanel extends JPanel implements Runnable {
 				if(monsterList.get(i) != null){
 
 					monsterList.get(i).update();
+				}
+			}
+
+			for (int i = 0; i < entityList.size(); i++) {
+				if(entityList.get(i) != null){
+					entityList.get(i).update();
 				}
 			}
 
