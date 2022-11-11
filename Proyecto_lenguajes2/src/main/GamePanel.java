@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JPanel;
 
 import entity.*;
@@ -99,25 +100,30 @@ public class GamePanel extends JPanel implements Runnable {
 				projectileList.clear();
 				entityList.clear();
 				monsterList.clear();
+				aSetter.level1 = new ArrayList<Pair>(Arrays.asList( new Pair(4,4), new Pair(5,5), new Pair(6,6) ));
+				aSetter.level2 = new ArrayList<Pair>(Arrays.asList( new Pair(7,3), new Pair(7,4), new Pair(7,5) ));
+				aSetter.level3 = new ArrayList<Pair>(Arrays.asList( new Pair(2,5), new Pair(3,5), new Pair(4,5) ));
 				actual_level = 0;
 				setupGame();
 			}
 			if(actual_level == 3){
 				GAME_STATE = TITLE_STATE;
 				tank.life = tank.maxLife;
+				tank.speed = 2;
 				projectileList.clear();
 				entityList.clear();
 				monsterList.clear();
 				actual_level = 0;
+				aSetter.level1 = new ArrayList<Pair>(Arrays.asList( new Pair(4,4), new Pair(5,5), new Pair(6,6) ));
+				aSetter.level2 = new ArrayList<Pair>(Arrays.asList( new Pair(7,3), new Pair(7,4), new Pair(7,5) ));
+				aSetter.level3 = new ArrayList<Pair>(Arrays.asList( new Pair(2,5), new Pair(3,5), new Pair(4,5) ));
 				setupGame();
 			}
 
 			if(monsterList.isEmpty() && entityList.isEmpty() && actual_level != 3){
-				//projectileList.clear();
-				//entityList.clear();
-				//monsterList.clear();
 
 				actual_level+=1;
+				tank.life = tank.maxLife;
 				tileM.loadMap(actual_level);
 				setupGame();
 

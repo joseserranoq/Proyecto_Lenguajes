@@ -51,7 +51,7 @@ public class Tank extends Entity {
 	public void update() {
 		//if the keys a,w,s,d are pressed it will move
 		if (kh.upPressed || kh.downPressed || kh.leftPressed || kh.rightPressed) {
-			if (kh.upPressed) {
+			if (kh.upPressed && freezed == false) {
 				DIRECTION = "UP";
 				//Y -= SPEED;
 			} else if (kh.downPressed) {
@@ -79,7 +79,7 @@ public class Tank extends Entity {
 			contactBullet(bulletIndex);
 			//contactMonster(entityIndex);
 			// IF COLLISIONON IS FALSE TANK MOVE
-			if (collisionOn == false) {
+			if (collisionOn == false && freezed == false) {
 				switch (DIRECTION) {
 					case "UP":
 						Y -= SPEED;
@@ -97,7 +97,7 @@ public class Tank extends Entity {
 			}
 		}
 		if(kh.fPressed && projectile.alive == false) {
-			projectile.set(X, Y, DIRECTION, true, this);
+			projectile.set(X, Y, DIRECTION, true, this, 1);
 			gp.projectileList.add(projectile);
 		}
 
@@ -106,6 +106,14 @@ public class Tank extends Entity {
 			if(invincibleCounter > 60){
 				invincible = false;
 				invincibleCounter = 0;
+			}
+		}
+
+		if(freezed == true){
+			freezeCounter++;
+			if(freezeCounter > 120){
+				freezed = false;
+				freezeCounter = 0;
 			}
 		}
 
@@ -122,10 +130,16 @@ public class Tank extends Entity {
 
 	private void contactBullet(int bulletIndex) {
 		if(bulletIndex != 999) {
+			if(gp.projectileList.get(bulletIndex).name == "FreezeBullet" && freezed == false){
+				freezed = true;
+				gp.projectileList.get(bulletIndex).alive = false;
+				return;
+			}
 			if(invincible == false){
 				life -= gp.projectileList.get(bulletIndex).damage;
 				invincible = true;
 				gp.projectileList.get(bulletIndex).alive = false;
+				return;
 			}
 
 		}

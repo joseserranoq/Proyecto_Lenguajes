@@ -70,7 +70,7 @@ public class ExplosiveTank extends Entity {
             actionLockCounter = 0;
 
             if(projectile.alive == false){
-                projectile.set(X, Y, DIRECTION, true, this);
+                projectile.set(X, Y, DIRECTION, true, this, 1);
 
                 gp.projectileList.add(projectile);
             }

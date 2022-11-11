@@ -17,17 +17,12 @@ public class Bullet extends Projectile {
 		SPEED = 5;
 		alive = false;
 		damage = 1;
-		//solidArea = new Rectangle(this.X,this.Y,32,32);
+		solidArea = new Rectangle(8,16,32,32);
 		getImage();
 		// TODO Auto-generated constructor stub
 	}
 
-
-
 	GamePanel gp;
-	
-
-	
 	public void getImage() {
 		try {
 			up1 = ImageIO.read(getClass().getResourceAsStream("/objects/BULLET.png"));

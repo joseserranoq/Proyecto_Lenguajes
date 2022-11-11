@@ -15,7 +15,6 @@ public class ExplosiveBullet extends Projectile {
         SPEED = 5;
         alive = false;
         damage = 2;
-        //solidArea = new Rectangle(this.X,this.Y,32,32);
         getImage();
     }
     GamePanel gp;

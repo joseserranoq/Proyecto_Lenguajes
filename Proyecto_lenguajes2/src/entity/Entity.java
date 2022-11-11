@@ -28,6 +28,8 @@ public class Entity {
 	Integer actionLockCounter = 0;
 	public int solidAreaDefaultX = 0, solidAreaDefaultY = 0;
 	public boolean collisionOn = false;
+	public boolean freezed = false;
+	public int freezeCounter = 0;
 	public Entity(GamePanel gp) {
 		this.gp = gp;
 		this.SPEED = 1;
@@ -40,17 +42,6 @@ public class Entity {
 		collisionOn = false;
 		gp.cChecker.checkTile(this);
 		gp.cChecker.checkObject(this,false);
-		boolean contactPlayer = gp.cChecker.checkPlayer(this);
-		if(this.type == 1 && contactPlayer == true) {
-			if(gp.tank.invincible == false) {
-				//give damage
-				gp.tank.life -=1;
-				gp.tank.invincible = true;
-				alive = false;
-			}
-		}
-
-
 
 		if (collisionOn == false) {
 			switch (DIRECTION) {
@@ -79,11 +70,6 @@ public class Entity {
 		}
 	}
 
-	public void attack(int X, int Y){
-		if(X == this.X && Y == this.Y){
-
-		}
-	}
 	public void draw(Graphics2D g2) {
 
 
