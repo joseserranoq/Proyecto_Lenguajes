@@ -44,8 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public ArrayList<Entity> projectileList = new ArrayList<>(); 
 	
-	
-	
+
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
@@ -180,18 +179,13 @@ public class GamePanel extends JPanel implements Runnable {
 			for(int i = 0; i < projectileList.size(); i++) {
 				projectileList.get(i).draw(g2);
 			}
-
 			for(int i = 0; i < entityList.size(); i++) {
 				entityList.get(i).draw(g2);
 			}
 			for(int i = 0; i < monsterList.size(); i++) {
 				monsterList.get(i).draw(g2);
 			}
-
 			g2.dispose();
 		}
-
-
 	}
-	
 }

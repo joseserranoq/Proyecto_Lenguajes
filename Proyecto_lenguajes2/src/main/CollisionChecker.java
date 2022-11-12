@@ -96,7 +96,6 @@ public class CollisionChecker {
                             if(player == true){
                                 index = i;
                             }
-
                         }
                         break;
                     }
@@ -148,8 +147,6 @@ public class CollisionChecker {
     public int checkEntity( Entity entity, ArrayList<Entity> target){
         int index = 999;
         for(int i = 0; i < target.size(); i++){
-
-
 
             if(target.get(i)!= null){
                 entity.solidArea.x = entity.X + entity.solidArea.x;

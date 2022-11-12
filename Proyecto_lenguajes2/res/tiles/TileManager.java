@@ -1,19 +1,20 @@
 package tiles;
 
 import main.GamePanel;
+
+import java.io.*;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import org.jpl7.Query;
 import java.util.stream.IntStream;
 
 public class TileManager {
     GamePanel gp;
     public Tile[] tile;
     public int mapTileNum[][];
+    public String[] fileData;
 
     public TileManager(GamePanel gp){
         this.gp = gp;
@@ -35,6 +36,7 @@ public class TileManager {
         }
     }
     public void loadMap(int mapNumber){
+        deleteFactsInProlog(); //when the map changes the facts in prolog should be too
         try{
             //get a map randomly
             Random rand = new Random();
@@ -60,6 +62,7 @@ public class TileManager {
 
             int col = 0;
             int row= 0;
+
             while(col< gp.maxScreenCol && row < gp.maxScreenRow){
                 String line = br.readLine();
                 while(col < gp.maxScreenCol){
@@ -74,6 +77,7 @@ public class TileManager {
                 }
             }
             br.close();
+            writeInProlog();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -97,6 +101,61 @@ public class TileManager {
                 row++;
                 y+= gp.tileSize;
             }
+        }
+    }
+    public void loadPrologFile(){
+        fileData = new String[102];
+        try {
+            int position = 0;
+            FileReader file = new FileReader("dikstra.txt");
+            BufferedReader bf = new BufferedReader(file);
+            while(bf.ready()){
+                fileData[position] = bf.readLine();
+                //System.out.println(bf.readLine());
+                position++;
+            }
+            bf.close();
+            System.out.println("Cargada la informacion de file.pl");
+        }catch(Exception e){
+            System.out.println("NO se ha cargado la informacion de file.pl");
+            e.printStackTrace();
+        }
+    }
+    public void deleteFactsInProlog(){
+        loadPrologFile();   //it is used to fill the variable fileData
+        try {
+            FileWriter file = new FileWriter("file.pl");
+            BufferedWriter bf = new BufferedWriter(file);
+            int i = 0;
+            while(i <fileData.length){
+                String w = fileData[i];
+                bf.write(w + "\n");
+                i++;
+            }
+            bf.close();
+        }catch(Exception e){
+            System.out.println("No se ha borrado la informacion de deleteFactsInProlog");
+            e.printStackTrace();
+        }
+    }
+    public void writeInProlog(){
+        //If the file has content of facts we are going to delete it
+        try{
+
+            FileWriter file = new FileWriter("file.pl",true);
+            BufferedWriter bf = new BufferedWriter(file);
+            for(int i = 0; i < mapTileNum.length; i++){
+                for(int y = 0; y < mapTileNum[i].length; y++){
+                    if(mapTileNum[i][y] == 0) { //it is going to write the tiles that has not collision
+                        bf.write("dist(" + Integer.toString(i) + "," + Integer.toString(y) + "," + "1"+").\n");
+                    }
+                }
+            }
+            bf.close();
+            System.out.println("Function writeInProlog has finished");
+        }catch(Exception e){
+            System.out.println("writeInProlog has an error. " );
+            e.printStackTrace();
         }
     }
 }
