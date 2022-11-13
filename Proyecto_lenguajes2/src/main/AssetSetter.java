@@ -65,9 +65,6 @@ public class AssetSetter {
                 gp.entityList.add(coin3);
                 level3.remove(random);
                 break;
-
-
-
         }
 
 
