@@ -3,6 +3,9 @@ package tiles;
 import main.GamePanel;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -138,6 +141,90 @@ public class TileManager {
             e.printStackTrace();
         }
     }
+    public String getFacts(int axisX1,int axisY1,String direction){   //
+        int axisX2 = 0;
+        int axisY2 = 0;
+        switch(direction){
+            case "up":
+                axisX2 = axisX1 - 1;
+                axisY2 = axisY1;
+                break;
+            case "down":
+                axisX2 = axisX1 + 1;
+                axisY2 = axisY1;
+                break;
+            case "right":
+                axisX2 = axisX1;
+                axisY2 = axisY1 + 1;
+                break;
+            case "left":
+                axisX2 = axisX1;
+                axisY2 = axisY1 - 1;
+                break;
+        }
+        String fact = String.format("dist((%s,%s),(%s,%s),1).\n", axisX1, axisY1, axisX2, axisY2);
+        //System.out.println(fact);
+        return fact;
+    }
+    public int[] checkLTiles(int x,int y, ArrayList<int[]> l){
+        for(int i=0;i<l.size();i++){
+            if(l.get(i)[0] == x && l.get(i)[1] == y){
+                return l.get(i);
+            }
+        }
+        return null;
+    }
+    public void writeInProlog(){
+        // generar los axis para realizar las rutas
+        //If the file has content of facts we are going to delete it
+        try{
+
+            FileWriter file = new FileWriter("file.pl",true);
+            BufferedWriter bf = new BufferedWriter(file);
+            ArrayList<int[]> tilesAvailable= new ArrayList<>();
+            for(int x = 0; x < mapTileNum.length; x++) {
+                for (int y = 0; y < mapTileNum[x].length; y++) {
+                    if (mapTileNum[x][y] == 0) { //it is going to write the tiles that has not collision
+                        //tilesAvailable.put(x, y);  //it appends the x and y that has not collision
+                        int[] arr = new int[2];
+                        arr[0] = x;
+                        arr[1] = y;
+                        tilesAvailable.add(arr);
+                    }
+                }
+            }
+            for(int i=0;i < tilesAvailable.size();i++){
+                int x = tilesAvailable.get(i)[0];
+                int y = tilesAvailable.get(i)[1];
+                //up
+                int[] up = checkLTiles(x-1,y,tilesAvailable);
+                int[] down = checkLTiles(x+1,y,tilesAvailable);
+                int[] right = checkLTiles(x,y+1,tilesAvailable);
+                int[] left = checkLTiles(x,y-1,tilesAvailable);
+                if(x != 0 && up != null){
+                    //getFacts(x,y,"up");
+                    bf.write(getFacts(up[0],up[1],"up"));
+                }
+                //down
+                if(x != gp.maxScreenRow - 1 && down != null){
+                    bf.write(getFacts(x,y,"down"));
+                }
+                //right
+                if(y != gp.maxScreenCol - 1 && right != null)
+                    bf.write(getFacts(x,y,"right"));
+                //left
+                if(y != 0 && left != null)
+                    bf.write(getFacts(x,y,"left"));
+            }
+            bf.close();
+            System.out.println("Function writeInProlog has finished");
+        }catch(Exception e){
+            System.out.println("writeInProlog has an error. " );
+            e.printStackTrace();
+        }
+    }
+}
+    /*
     public void writeInProlog(){
         //If the file has content of facts we are going to delete it
         try{
@@ -159,3 +246,4 @@ public class TileManager {
         }
     }
 }
+*/

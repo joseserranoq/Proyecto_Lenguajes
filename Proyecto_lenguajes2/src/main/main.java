@@ -29,9 +29,10 @@ public class main {
 
         Map<String, Term>[] sol = q2.allSolutions();
 
-        t1 = "path(1,10,X,_).";
+        t1 = "path((7,10),(11,1),X,_).";
         Query q3 = new Query(t1);
         Map<String,Term> see = q3.oneSolution();
-        System.out.println(see);
+        System.out.println(see.keySet());
+        System.out.println(see.values());
     }
 }

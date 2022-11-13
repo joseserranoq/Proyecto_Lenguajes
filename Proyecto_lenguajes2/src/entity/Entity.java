@@ -59,9 +59,6 @@ public class Entity {
 					break;
 			}
 		}
-
-
-
 	}
 
 	private void contactBullet(int bulletIndex) {
@@ -71,9 +68,6 @@ public class Entity {
 	}
 
 	public void draw(Graphics2D g2) {
-
-
-
 	}
 
 }

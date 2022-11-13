@@ -103,6 +103,7 @@ public class GamePanel extends JPanel implements Runnable {
 				aSetter.level2 = new ArrayList<Pair>(Arrays.asList( new Pair(7,3), new Pair(7,4), new Pair(7,5) ));
 				aSetter.level3 = new ArrayList<Pair>(Arrays.asList( new Pair(2,5), new Pair(3,5), new Pair(4,5) ));
 				actual_level = 0;
+				tileM.loadMap(actual_level);
 				setupGame();
 			}
 			if(actual_level == 3){
@@ -116,6 +117,7 @@ public class GamePanel extends JPanel implements Runnable {
 				aSetter.level1 = new ArrayList<Pair>(Arrays.asList( new Pair(4,4), new Pair(5,5), new Pair(6,6) ));
 				aSetter.level2 = new ArrayList<Pair>(Arrays.asList( new Pair(7,3), new Pair(7,4), new Pair(7,5) ));
 				aSetter.level3 = new ArrayList<Pair>(Arrays.asList( new Pair(2,5), new Pair(3,5), new Pair(4,5) ));
+				tileM.loadMap(actual_level);
 				setupGame();
 			}
 
